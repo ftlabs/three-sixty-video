@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "main": "scripts/index.js",
   "scripts": {
-	"watch": "./parallel.sh 'http-server' 'nodemon --watch ./scripts/ -e js --exec npm run build'",
-	"build": "webpack",
+    "watch": "./parallel.sh 'http-server' 'nodemon --watch ./scripts/ -e js --exec npm run build'",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "three": "^0.76.1"
+    "three": "^0.76.1",
+    "webvr-polyfill": "^0.9.4"
   },
   "devDependencies": {
     "babel-core": "^6.7.7",

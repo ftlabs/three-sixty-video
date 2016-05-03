@@ -24,6 +24,9 @@ let ygrid = 10;
 let counter = 1;
 
 video.style.display = 'none';
+video.loop = true;
+video.muted = true;
+video.play();
 
 init();
 animate();

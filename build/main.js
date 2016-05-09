@@ -51,10 +51,6 @@
 	__webpack_require__(2);
 
 	WebVRConfig = {
-
-	  // Forces availability of VR mode, even for non-mobile devices.
-	  FORCE_ENABLE_VR: true, // Default: false.
-
 	  BUFFER_SCALE: 0.5,
 	};
 
@@ -193,6 +189,19 @@
 			const sphere = new THREE.Mesh( geometry, material );
 			this.scene.add( sphere );
 
+			if (video.readyState === 4) {
+				video.play();
+				this.startAnimation();
+			} else {
+				video.addEventListener('loadeddata', function onloadeddata() {
+					video.removeEventListener('loadeddata', onloadeddata);
+					if(video.readyState === 4) {
+						video.play();
+						this.startAnimation();
+					}
+				}.bind(this));
+			}
+
 		}
 
 		resize() {
@@ -321,13 +330,11 @@
 		const video = document.getElementsByTagName('video')[0];
 		video.loop = true;
 		video.muted = true;
-		video.play();
 	}());
 
 	const videoContainer = document.querySelectorAll('*[data-three-sixy-video]');
 	[].slice.call(videoContainer)
-	.map(el => new ThreeSixtyVideo(el))
-	.forEach(tsv => tsv.startAnimation());
+	.map(el => new ThreeSixtyVideo(el));
 
 
 /***/ },

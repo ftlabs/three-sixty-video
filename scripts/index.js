@@ -150,10 +150,10 @@ class ThreeSixtyVideo {
 	}
 
 	resize() {
-		this.camera.aspect = window.innerWidth / window.innerHeight;
-		this.camera.updateProjectionMatrix();
 
 		if (this.vrDisplay && this.vrDisplay.isPresenting) {
+
+			this.camera.aspect = window.innerWidth / window.innerHeight;
 
 			const leftEye = this.vrDisplay.getEyeParameters('left');
 			const rightEye = this.vrDisplay.getEyeParameters('right');
@@ -216,6 +216,7 @@ class ThreeSixtyVideo {
 				this.renderSceneView(pose, this.vrDisplay.getEyeParameters('right'));
 
 				this.renderer.setScissorTest( false );
+				this.renderer.setViewport( 0, 0, size.width, size.height );
 				this.vrDisplay.submitFrame(pose);
 			} else {
 				this.renderSceneView(pose, null);
@@ -228,20 +229,21 @@ class ThreeSixtyVideo {
 	}
 
 	onVRRequestPresent () {
-		this.vrDisplay.requestPresent([{ source: this.renderer.domElement }]).then(function () {
-		}, function () {
+		this.vrDisplay.requestPresent([{ source: this.renderer.domElement }])
+		.then(() => {}, function () {
 			console.error('requestPresent failed.', 2000);
 		});
 	}
 
 	onVRExitPresent () {
-		this.vrDisplay.exitPresent().then(function () {
-		}, function () {
+		this.vrDisplay.exitPresent()
+		.then(() => {}, function () {
 			console.error('exitPresent failed.', 2000);
 		});
 	}
 
 	onVRPresentChange () {
+		this.resize();
 		if (this.vrDisplay.isPresenting) {
 			if (this.vrDisplay.capabilities.hasExternalDisplay) {
 				this.removeButton(this.vrPresentButton);

@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+  Header add Access-Control-Allow-Origin: "https://ada.is"
+  Header add Access-Control-Allow-Methods: "GET"
+  Header add Access-Control-Allow-Headers: "Content-Type"
+  Header set Cache-Control "max-age=290304000, public"
+  RewriteEngine on
+  RewriteBase /
+</IfModule>

@@ -143,13 +143,13 @@ class ThreeSixtyVideo {
 		const sphere = new THREE.Mesh( geometry, material );
 		this.scene.add( sphere );
 
-		if (video.readyState === 4) {
+		if (video.readyState >= 2) {
 			video.play();
 			this.startAnimation();
 		} else {
 			video.addEventListener('loadeddata', function onloadeddata() {
 				video.removeEventListener('loadeddata', onloadeddata);
-				if(video.readyState === 4) {
+				if(video.readyState >= 2) {
 					video.play();
 					this.startAnimation();
 				}
@@ -275,8 +275,8 @@ class ThreeSixtyVideo {
 		return button;
 	}
 
-	removeButton() {
-
+	removeButton(el) {
+		el.parentNode.removeChild(el);
 	}
 }
 

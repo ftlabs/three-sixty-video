@@ -1,13 +1,11 @@
 'use strict';
 
-
-const THREE = require('three');
-require('webvr-polyfill');
-
-WebVRConfig = {
+window.WebVRConfig = {
   BUFFER_SCALE: 0.5,
 };
 
+const THREE = require('three');
+require('webvr-polyfill');
 
 // from THREE.js
 function fovToNDCScaleOffset( fov ) {
@@ -94,8 +92,8 @@ class ThreeSixtyVideo {
 			.then(displays => {
 				if (displays.length > 0) {
 					this.vrDisplay = displays[0];
-					this.addButton('Reset Pose', 'R', null, function () { this.vrDisplay.resetPose(); });
-					if (this.vrDisplay.capabilities.canPresent) this.vrPresentButton = this.addButton('Enter VR', 'E', 'media/icons/cardboard64.png', this.onVRRequestPresent);
+					this.addButton('Reset', 'R', null, function () { this.vrDisplay.resetPose(); });
+					if (this.vrDisplay.capabilities.canPresent) this.vrPresentButton = this.addButton('Enter VR', 'E', 'cardboard-icon', this.onVRRequestPresent);
 					window.addEventListener('vrdisplaypresentchange', () => this.onVRPresentChange(), false);
 				}
 			});
@@ -105,6 +103,10 @@ class ThreeSixtyVideo {
 		} else {
 			console.error('Your browser does not support WebVR. See <a href=\'http://webvr.info\'>webvr.info</a> for assistance.');
 		}
+
+		this.buttonContainer = document.createElement('div');
+		this.buttonContainer.classList.add('button-container');
+		videoContainer.appendChild(this.buttonContainer);
 
 		this.camera;
 		this.scene;
@@ -122,7 +124,7 @@ class ThreeSixtyVideo {
 		this.scene = new THREE.Scene();
 
 		const renderer = new THREE.WebGLRenderer( { antialias: false, preserveDrawingBuffer } );
-		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
 		renderer.setSize( rect.width, rect.height );
 		renderer.autoClear = false;
 		videoContainer.appendChild( renderer.domElement );
@@ -256,27 +258,28 @@ class ThreeSixtyVideo {
 		if (this.vrDisplay.isPresenting) {
 			if (this.vrDisplay.capabilities.hasExternalDisplay) {
 				this.removeButton(this.vrPresentButton);
-				this.vrPresentButton = this.addButton('Exit VR', 'E', 'media/icons/cardboard64.png', this.onVRExitPresent);
+				this.vrPresentButton = this.addButton('Exit VR', 'E', 'cardboard-icon', this.onVRExitPresent);
 			}
 		} else {
 			if (this.vrDisplay.capabilities.hasExternalDisplay) {
 				this.removeButton(this.vrPresentButton);
-				this.vrPresentButton = this.addButton('Enter VR', 'E', 'media/icons/cardboard64.png', this.onVRRequestPresent);
+				this.vrPresentButton = this.addButton('Enter VR', 'E', 'cardboard-icon', this.onVRRequestPresent);
 			}
 		}
 	}
 
 
-	addButton(text, shortcut, icon, callback) {
+	addButton(text, shortcut, classname, callback) {
 		const button = document.createElement('button');
+		if (classname) button.classList.add(classname);
 		button.textContent = text;
 		button.addEventListener('click', callback.bind(this));
-		this.videoContainer.appendChild(button);
+		this.buttonContainer.appendChild(button);
 		return button;
 	}
 
 	removeButton(el) {
-		el.parentNode.removeChild(el);
+		this.buttonContainer.parentNode.removeChild(el);
 	}
 }
 
@@ -286,6 +289,6 @@ class ThreeSixtyVideo {
 	video.muted = true;
 }());
 
-const videoContainer = document.querySelectorAll('*[data-three-sixy-video]');
+const videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
 [].slice.call(videoContainer)
 .map(el => new ThreeSixtyVideo(el));

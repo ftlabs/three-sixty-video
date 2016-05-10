@@ -1,0 +1,7 @@
+{
+  "name": "Tech Radar",
+  "dependencies": {
+    "o-tracking": "^1.1.8",
+    "o-buttons": "^3.1.4"
+  }
+}

@@ -1,0 +1,32 @@
+$o-buttons-is-silent: true;
+@import 'o-buttons/main';
+
+*[data-three-sixty-video] {
+	display: inline-block;
+    position: relative;
+
+	.button-container {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 0.5em;
+		text-align: right;
+
+		button {
+			@include oButtons(big, inverse);
+
+			&.cardboard-icon:before {
+				display: inline-block;
+				content: '';
+				width: 1.5em;
+				height: 1.5em;
+				background: url("assets/cardboard.svg") no-repeat center center;
+				background-size: contain;
+				vertical-align: top;
+				margin: -0.25em 0;
+				margin-right: 0.2em;
+			}
+		}
+	}
+}

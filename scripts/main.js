@@ -130,7 +130,23 @@ class ThreeSixtyVideo {
 		videoContainer.appendChild( renderer.domElement );
 		this.renderer = renderer;
 
-		const texture = new THREE.VideoTexture( video );
+		if (video.readyState >= 2) {
+			video.play();
+			this.addGeometry();
+			this.startAnimation();
+		} else {
+			video.addEventListener('canplay', function oncanplay() {
+				video.removeEventListener('canplay', oncanplay);
+				this.addGeometry();
+				this.startAnimation();
+			}.bind(this));
+		}
+
+	}
+
+	addGeometry() {
+
+		const texture = new THREE.VideoTexture( this.video );
 		texture.minFilter = THREE.LinearFilter;
 		texture.magFilter = THREE.LinearFilter;
 		texture.format = THREE.RGBFormat;
@@ -144,20 +160,6 @@ class ThreeSixtyVideo {
 
 		const sphere = new THREE.Mesh( geometry, material );
 		this.scene.add( sphere );
-
-		if (video.readyState >= 2) {
-			video.play();
-			this.startAnimation();
-		} else {
-			video.addEventListener('loadeddata', function onloadeddata() {
-				video.removeEventListener('loadeddata', onloadeddata);
-				if(video.readyState >= 2) {
-					video.play();
-					this.startAnimation();
-				}
-			}.bind(this));
-		}
-
 	}
 
 	resize() {
@@ -180,9 +182,11 @@ class ThreeSixtyVideo {
 
 	stopAnimation() {
 		cancelAnimationFrame(this.raf);
+		this.video.pause();
 	}
 
 	startAnimation() {
+		this.video.play();
 		this.raf = requestAnimationFrame( () => this.startAnimation() );
 		this.render();
 	}

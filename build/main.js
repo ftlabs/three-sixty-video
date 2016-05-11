@@ -192,36 +192,39 @@
 			videoContainer.appendChild(renderer.domElement);
 			this.renderer = renderer;
 	
-			var texture = new THREE.VideoTexture(video);
-			texture.minFilter = THREE.LinearFilter;
-			texture.magFilter = THREE.LinearFilter;
-			texture.format = THREE.RGBFormat;
-	
-			var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-			var geometry = new THREE.SphereGeometry(5, 16, 8);
-	
-			var mS = new THREE.Matrix4().identity();
-			mS.elements[0] = -1;
-			geometry.applyMatrix(mS);
-	
-			var sphere = new THREE.Mesh(geometry, material);
-			this.scene.add(sphere);
-	
 			if (video.readyState >= 2) {
 				video.play();
+				this.addGeometry();
 				this.startAnimation();
 			} else {
-				video.addEventListener('loadeddata', (function onloadeddata() {
-					video.removeEventListener('loadeddata', onloadeddata);
-					if (video.readyState >= 2) {
-						video.play();
-						this.startAnimation();
-					}
+				video.addEventListener('canplay', (function oncanplay() {
+					video.removeEventListener('canplay', oncanplay);
+					this.addGeometry();
+					this.startAnimation();
 				}).bind(this));
 			}
 		}
 	
 		_createClass(ThreeSixtyVideo, [{
+			key: 'addGeometry',
+			value: function addGeometry() {
+	
+				var texture = new THREE.VideoTexture(this.video);
+				texture.minFilter = THREE.LinearFilter;
+				texture.magFilter = THREE.LinearFilter;
+				texture.format = THREE.RGBFormat;
+	
+				var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
+				var geometry = new THREE.SphereGeometry(5, 16, 8);
+	
+				var mS = new THREE.Matrix4().identity();
+				mS.elements[0] = -1;
+				geometry.applyMatrix(mS);
+	
+				var sphere = new THREE.Mesh(geometry, material);
+				this.scene.add(sphere);
+			}
+		}, {
 			key: 'resize',
 			value: function resize() {
 	
@@ -241,12 +244,14 @@
 			key: 'stopAnimation',
 			value: function stopAnimation() {
 				cancelAnimationFrame(this.raf);
+				this.video.pause();
 			}
 		}, {
 			key: 'startAnimation',
 			value: function startAnimation() {
 				var _this2 = this;
 	
+				this.video.play();
 				this.raf = requestAnimationFrame(function () {
 					return _this2.startAnimation();
 				});

@@ -152,7 +152,7 @@ class ThreeSixtyVideo {
 		texture.format = THREE.RGBFormat;
 
 		const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-		const geometry = new THREE.SphereGeometry( 5, 16, 8 );
+		const geometry = new THREE.SphereGeometry( 50, 64, 64 );
 
 		const mS = (new THREE.Matrix4()).identity();
 		mS.elements[0] = -1;

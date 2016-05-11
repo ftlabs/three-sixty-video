@@ -215,7 +215,7 @@
 				texture.format = THREE.RGBFormat;
 	
 				var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-				var geometry = new THREE.SphereGeometry(5, 16, 8);
+				var geometry = new THREE.SphereGeometry(50, 64, 64);
 	
 				var mS = new THREE.Matrix4().identity();
 				mS.elements[0] = -1;

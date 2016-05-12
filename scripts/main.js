@@ -97,7 +97,7 @@ class ThreeSixtyVideo {
 					window.addEventListener('vrdisplaypresentchange', () => this.onVRPresentChange(), false);
 				}
 			});
-			preserveDrawingBuffer = false;
+			preserveDrawingBuffer = true;
 		} else if (navigator.getVRDevices) {
 			console.error('Your browser supports WebVR but not the latest version. See <a href=\'http://webvr.info\'>webvr.info</a> for more info.');
 		} else {
@@ -134,15 +134,24 @@ class ThreeSixtyVideo {
 
 		this.startAnimation();
 		if (video.readyState >= 2) {
-			video.play();
-			this.updateTexture();
+			this.addPlayButton();
 		} else {
 			video.addEventListener('canplay', function oncanplay() {
 				video.removeEventListener('canplay', oncanplay);
-				this.updateTexture();
+				this.addPlayButton();
 			}.bind(this));
 		}
 
+	}
+
+	addPlayButton() {
+		if (this.playButton) return;
+		this.playButton = this.addButton('Play', 'space', 'play-icon', () => {
+			this.removeButton(this.playButton);
+			this.playButton = null;
+			this.updateTexture();
+			this.video.play();
+		});
 	}
 
 	updateTexture() {
@@ -193,7 +202,6 @@ class ThreeSixtyVideo {
 	}
 
 	startAnimation() {
-		this.video.play();
 		this.raf = requestAnimationFrame( () => this.startAnimation() );
 		this.render();
 	}
@@ -290,7 +298,7 @@ class ThreeSixtyVideo {
 	}
 
 	removeButton(el) {
-		this.buttonContainer.parentNode.removeChild(el);
+		this.buttonContainer.removeChild(el);
 	}
 }
 

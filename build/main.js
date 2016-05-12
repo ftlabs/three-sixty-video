@@ -159,7 +159,7 @@
 						}, false);
 					}
 				});
-				preserveDrawingBuffer = false;
+				preserveDrawingBuffer = true;
 			} else if (navigator.getVRDevices) {
 				console.error('Your browser supports WebVR but not the latest version. See <a href=\'http://webvr.info\'>webvr.info</a> for more info.');
 			} else {
@@ -196,17 +196,29 @@
 	
 			this.startAnimation();
 			if (video.readyState >= 2) {
-				video.play();
-				this.updateTexture();
+				this.addPlayButton();
 			} else {
 				video.addEventListener('canplay', (function oncanplay() {
 					video.removeEventListener('canplay', oncanplay);
-					this.updateTexture();
+					this.addPlayButton();
 				}).bind(this));
 			}
 		}
 	
 		_createClass(ThreeSixtyVideo, [{
+			key: 'addPlayButton',
+			value: function addPlayButton() {
+				var _this2 = this;
+	
+				if (this.playButton) return;
+				this.playButton = this.addButton('Play', 'space', 'play-icon', function () {
+					_this2.removeButton(_this2.playButton);
+					_this2.playButton = null;
+					_this2.updateTexture();
+					_this2.video.play();
+				});
+			}
+		}, {
 			key: 'updateTexture',
 			value: function updateTexture() {
 				var texture = new THREE.VideoTexture(this.video);
@@ -257,11 +269,10 @@
 		}, {
 			key: 'startAnimation',
 			value: function startAnimation() {
-				var _this2 = this;
+				var _this3 = this;
 	
-				this.video.play();
 				this.raf = requestAnimationFrame(function () {
-					return _this2.startAnimation();
+					return _this3.startAnimation();
 				});
 				this.render();
 			}
@@ -362,7 +373,7 @@
 		}, {
 			key: 'removeButton',
 			value: function removeButton(el) {
-				this.buttonContainer.parentNode.removeChild(el);
+				this.buttonContainer.removeChild(el);
 			}
 		}]);
 	

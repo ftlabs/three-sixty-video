@@ -192,36 +192,44 @@
 			videoContainer.appendChild(renderer.domElement);
 			this.renderer = renderer;
 	
+			this.addGeometry();
+	
+			this.startAnimation();
 			if (video.readyState >= 2) {
 				video.play();
-				this.addGeometry();
-				this.startAnimation();
+				this.updateTexture();
 			} else {
 				video.addEventListener('canplay', (function oncanplay() {
 					video.removeEventListener('canplay', oncanplay);
-					this.addGeometry();
-					this.startAnimation();
+					this.updateTexture();
 				}).bind(this));
 			}
 		}
 	
 		_createClass(ThreeSixtyVideo, [{
-			key: 'addGeometry',
-			value: function addGeometry() {
-	
+			key: 'updateTexture',
+			value: function updateTexture() {
 				var texture = new THREE.VideoTexture(this.video);
 				texture.minFilter = THREE.LinearFilter;
 				texture.magFilter = THREE.LinearFilter;
 				texture.format = THREE.RGBFormat;
 	
 				var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-				var geometry = new THREE.SphereGeometry(50, 64, 64);
+				this.sphere.material = material;
+			}
+		}, {
+			key: 'addGeometry',
+			value: function addGeometry() {
+	
+				var material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+				var geometry = new THREE.SphereGeometry(50, 64, 32);
 	
 				var mS = new THREE.Matrix4().identity();
 				mS.elements[0] = -1;
 				geometry.applyMatrix(mS);
 	
 				var sphere = new THREE.Mesh(geometry, material);
+				this.sphere = sphere;
 				this.scene.add(sphere);
 			}
 		}, {
@@ -283,13 +291,13 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				this.renderer.clear();
 				if (this.vrDisplay) {
 					var pose = this.vrDisplay.getPose();
 					if (this.vrDisplay.isPresenting) {
 						var size = this.renderer.getSize();
 	
 						this.renderer.setScissorTest(true);
-						this.renderer.clear();
 	
 						this.renderer.setScissor(0, 0, size.width / 2, size.height);
 						this.renderer.setViewport(0, 0, size.width / 2, size.height);

@@ -1,15 +1,3 @@
-*[data-three-sixty-video] .button-container button.play-icon {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf11c;&nbsp;'); }
-
-*[data-three-sixty-video] .button-container button.play-icon:before {
-  content: "\f11c"; }
-
-*[data-three-sixty-video] .button-container button.play-icon {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf11c;&nbsp;'); }
-
-*[data-three-sixty-video] .button-container button.play-icon:before {
-  content: "\f11c"; }
-
 @font-face {
   font-family: "ft-icons";
   src: url(/bower_components/o-ft-icons/build/ft-icons-a36960b1d913300d65ebda65b7f05fbc.eot);
@@ -90,26 +78,22 @@
         transform: translate(-50%, -50%);
         border-radius: 50%;
         border: none;
-        width: 5rem;
-        height: 5rem;
+        width: 70px;
+        height: 70px;
         padding: 0;
         margin: 0;
         text-align: center;
         font-size: 0;
-        font-family: "ft-icons";
+        background-image: url("https://image.webservices.ft.com/v1/images/raw/fticon:play?source=o-icons&tint=%232BBBBF,%232BBBBF&format=svg");
+        background-image: url("https://image.webservices.ft.com/v1/images/raw/fticon:play?source=o-icons&tint=%232BBBBF,%232BBBBF&format=png&width=70px") \9;
+        width: 70px;
+        height: 70px;
         display: inline-block;
-        vertical-align: middle;
-        font-weight: normal !important;
-        font-style: normal !important;
-        speak: none;
-        text-decoration: inherit;
-        text-transform: none;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale; }
-        *[data-three-sixty-video] .button-container button.play-icon:before {
-          font-size: 4rem;
-          line-height: 5rem; }
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: 50%;
+        background-color: transparent;
+        vertical-align: middle; }
       *[data-three-sixty-video] .button-container button.cardboard-icon:before {
         display: inline-block;
         content: '';

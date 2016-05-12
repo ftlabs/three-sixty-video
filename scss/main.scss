@@ -1,6 +1,6 @@
 $o-buttons-is-silent: true;
 @import 'o-buttons/main';
-@import "o-ft-icons/main";
+@import "o-icons/main";
 
 @include oFtIconsFontFace();
 
@@ -29,19 +29,13 @@ $o-buttons-is-silent: true;
 				transform: translate(-50%, -50%);
 				border-radius: 50%;
 				border: none;
-				width: 5rem;
-				height: 5rem;
+				width: 70px;
+				height: 70px;
 				padding: 0;
 				margin: 0;
 				text-align: center;
 				font-size: 0;
-				@include oFtIconsBaseIconStyles();
-				@extend %o-ft-icons-icon--play;
-
-				&:before {
-					font-size: 4rem;
-					line-height: 5rem;
-				}
+				@include oIconsGetIcon(play, #2bbbbf, 70px);
 			}
 
 			&.cardboard-icon:before {

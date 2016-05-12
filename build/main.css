@@ -1,3 +1,22 @@
+*[data-three-sixty-video] .button-container button.play-icon {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf11c;&nbsp;'); }
+
+*[data-three-sixty-video] .button-container button.play-icon:before {
+  content: "\f11c"; }
+
+*[data-three-sixty-video] .button-container button.play-icon {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf11c;&nbsp;'); }
+
+*[data-three-sixty-video] .button-container button.play-icon:before {
+  content: "\f11c"; }
+
+@font-face {
+  font-family: "ft-icons";
+  src: url(/bower_components/o-ft-icons/build/ft-icons-a36960b1d913300d65ebda65b7f05fbc.eot);
+  src: url(/bower_components/o-ft-icons/build/ft-icons-a36960b1d913300d65ebda65b7f05fbc.eot?#iefix) format("embedded-opentype"), url(/bower_components/o-ft-icons/build/ft-icons-a36960b1d913300d65ebda65b7f05fbc.woff) format("woff"), url(/bower_components/o-ft-icons/build/ft-icons-a36960b1d913300d65ebda65b7f05fbc.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
 *[data-three-sixty-video] {
   display: inline-block;
   position: relative; }
@@ -5,9 +24,11 @@
     position: absolute;
     bottom: 0;
     left: 0;
+    top: 0;
     right: 0;
     padding: 0.5em;
-    text-align: right; }
+    text-align: right;
+    vertical-align: bottom; }
     *[data-three-sixty-video] .button-container button {
       display: inline-block;
       -webkit-box-sizing: border-box;
@@ -60,6 +81,35 @@
       *[data-three-sixty-video] .button-container button::-moz-focus-inner {
         border: 0;
         padding: 0; }
+      *[data-three-sixty-video] .button-container button.play-icon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: none;
+        width: 5rem;
+        height: 5rem;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        font-size: 0;
+        font-family: "ft-icons";
+        display: inline-block;
+        vertical-align: middle;
+        font-weight: normal !important;
+        font-style: normal !important;
+        speak: none;
+        text-decoration: inherit;
+        text-transform: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale; }
+        *[data-three-sixty-video] .button-container button.play-icon:before {
+          font-size: 4rem;
+          line-height: 5rem; }
       *[data-three-sixty-video] .button-container button.cardboard-icon:before {
         display: inline-block;
         content: '';

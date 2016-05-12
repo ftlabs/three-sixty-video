@@ -142,9 +142,15 @@ class ThreeSixtyVideo {
 			}.bind(this));
 		}
 
-		videoContainer.addEventListener('click', () => {
-			this.addPlayButton();
-			this.video.pause();
+		this.renderer.domElement.addEventListener('click', () => {
+			if (this.video.paused) {
+				this.removeButton(this.playButton);
+				this.playButton = null;
+				this.video.play();
+			} else {
+				this.addPlayButton();
+				this.video.pause();
+			}
 		});
 
 	}

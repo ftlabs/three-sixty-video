@@ -227,9 +227,15 @@
 				}).bind(this));
 			}
 	
-			videoContainer.addEventListener('click', function () {
-				_this.addPlayButton();
-				_this.video.pause();
+			this.renderer.domElement.addEventListener('click', function () {
+				if (_this.video.paused) {
+					_this.removeButton(_this.playButton);
+					_this.playButton = null;
+					_this.video.play();
+				} else {
+					_this.addPlayButton();
+					_this.video.pause();
+				}
 			});
 		}
 	

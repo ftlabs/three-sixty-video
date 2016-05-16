@@ -1,0 +1,86 @@
+---
+---
+
+html {
+	background: #FFF0F5;
+}
+html, body {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	color: #333;
+	margin: 0;
+	padding: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 300;
+}
+h2, h3 {
+	margin: 2em 0 1.5em 0;
+	border-bottom: 1px solid grey;
+}
+a {
+	color: #336ACE;
+}
+h2 a {
+	text-decoration: none;
+}
+.title {
+	border-bottom: 1px solid #ccc;
+	background: url(./images/pattern.svg);
+	background-size: cover;
+	margin: 0;
+	padding: 2em 1em 1em 1em;
+}
+.title h1 {
+	font-size: 2em;
+	text-decoration: none;
+}
+img {
+	max-width: 100%;
+}
+.lifted {
+	position:relative;
+	background:#fff;
+	box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+
+	&:before,
+	&:after {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		bottom:15px;
+		left:3%;
+		width:50%;
+		height:20%;
+		max-width:300px;
+		box-shadow:0 15px 10px rgba(0, 0, 0, 0.7);
+		transform:rotate(-3deg);
+	}
+	&:after {
+		right:3%;
+		left:auto;
+		transform:rotate(3deg);
+	}
+}
+
+.code {
+	font-family: monospace;
+	display: inline;
+	white-space: wrap;
+}
+
+pre {
+	display: block;
+	border: 1px solid rgba(100, 100, 100, 0.5);
+	background: 1px solid rgba(100, 100, 100, 0.3);
+	padding: 0.5em;
+	margin: 1em;
+	overflow: auto;
+	tab-size: 4;
+	white-space: wrap;
+}
+
+footer {
+	padding: 1em;
+	border-top: 1px solid #ccc;
+}

@@ -135,18 +135,22 @@ class ThreeSixtyVideo {
 
 		this.startAnimation();
 		if (video.readyState >= 2) {
+			this.loadVideoTexture();
 			this.addPlayButton();
 		} else {
 			video.addEventListener('canplay', function oncanplay() {
 				video.removeEventListener('canplay', oncanplay);
+				this.loadVideoTexture();
 				this.addPlayButton();
 			}.bind(this));
 		}
 
 		this.renderer.domElement.addEventListener('click', () => {
+			if (!this.hasVideoTexture) return;
 			if (this.video.paused) {
 				this.removeButton(this.playButton);
 				this.playButton = null;
+				this.updateTexture(this.videoTexture);
 				this.video.play();
 			} else {
 				this.addPlayButton();
@@ -158,28 +162,49 @@ class ThreeSixtyVideo {
 
 	addPlayButton() {
 		if (this.playButton) return;
-		this.updateTexture();
 		this.playButton = this.addButton('Play', 'space', 'play-icon', e => {
 			this.removeButton(this.playButton);
 			this.playButton = null;
+			if (this.hasVideoTexture) this.updateTexture(this.videoTexture);
 			this.video.play();
 			e.stopPropagation();
 		});
 	}
 
-	updateTexture() {
+	loadVideoTexture() {
 		if (this.hasVideoTexture) return;
 		const texture = new THREE.VideoTexture( this.video );
 		texture.minFilter = THREE.LinearFilter;
 		texture.magFilter = THREE.LinearFilter;
 		texture.format = THREE.RGBFormat;
 
-		const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-		this.sphere.material = material;
 		this.hasVideoTexture = true;
+		this.videoTexture = texture;
+	}
+
+	updateTexture(map) {
+		if (this.currentTexture === map) return;
+		if (!map) throw Error('No texture to update');
+		this.currentTexture = map;
+		const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map });
+		this.sphere.material = material;
 	}
 
 	addGeometry() {
+
+		if (this.sphere) {
+			throw Error('Geometery already set up');
+		}
+
+		const poster = this.video.getAttribute('poster');
+		if (poster) {
+			const loader = new THREE.TextureLoader();
+			loader.crossOrigin = 'Anonymous';
+			loader.load(
+				poster,
+				t => (!this.hasVideoTexture || this.currentTexture !== this.VideoTexture) && this.updateTexture(t)
+			);
+		}
 
 		const material = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
 		const geometry = new THREE.SphereGeometry( 50, 64, 32 );

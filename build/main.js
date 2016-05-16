@@ -224,18 +224,22 @@
 	
 			this.startAnimation();
 			if (video.readyState >= 2) {
+				this.loadVideoTexture();
 				this.addPlayButton();
 			} else {
 				video.addEventListener('canplay', (function oncanplay() {
 					video.removeEventListener('canplay', oncanplay);
+					this.loadVideoTexture();
 					this.addPlayButton();
 				}).bind(this));
 			}
 	
 			this.renderer.domElement.addEventListener('click', function () {
+				if (!_this.hasVideoTexture) return;
 				if (_this.video.paused) {
 					_this.removeButton(_this.playButton);
 					_this.playButton = null;
+					_this.updateTexture(_this.videoTexture);
 					_this.video.play();
 				} else {
 					_this.addPlayButton();
@@ -250,30 +254,52 @@
 				var _this2 = this;
 	
 				if (this.playButton) return;
-				this.updateTexture();
 				this.playButton = this.addButton('Play', 'space', 'play-icon', function (e) {
 					_this2.removeButton(_this2.playButton);
 					_this2.playButton = null;
+					if (_this2.hasVideoTexture) _this2.updateTexture(_this2.videoTexture);
 					_this2.video.play();
 					e.stopPropagation();
 				});
 			}
 		}, {
-			key: 'updateTexture',
-			value: function updateTexture() {
+			key: 'loadVideoTexture',
+			value: function loadVideoTexture() {
 				if (this.hasVideoTexture) return;
 				var texture = new THREE.VideoTexture(this.video);
 				texture.minFilter = THREE.LinearFilter;
 				texture.magFilter = THREE.LinearFilter;
 				texture.format = THREE.RGBFormat;
 	
-				var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-				this.sphere.material = material;
 				this.hasVideoTexture = true;
+				this.videoTexture = texture;
+			}
+		}, {
+			key: 'updateTexture',
+			value: function updateTexture(map) {
+				if (this.currentTexture === map) return;
+				if (!map) throw Error('No texture to update');
+				this.currentTexture = map;
+				var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: map });
+				this.sphere.material = material;
 			}
 		}, {
 			key: 'addGeometry',
 			value: function addGeometry() {
+				var _this3 = this;
+	
+				if (this.sphere) {
+					throw Error('Geometery already set up');
+				}
+	
+				var poster = this.video.getAttribute('poster');
+				if (poster) {
+					var loader = new THREE.TextureLoader();
+					loader.crossOrigin = 'Anonymous';
+					loader.load(poster, function (t) {
+						return (!_this3.hasVideoTexture || _this3.currentTexture !== _this3.VideoTexture) && _this3.updateTexture(t);
+					});
+				}
 	
 				var material = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
 				var geometry = new THREE.SphereGeometry(50, 64, 32);
@@ -312,10 +338,10 @@
 		}, {
 			key: 'startAnimation',
 			value: function startAnimation() {
-				var _this3 = this;
+				var _this4 = this;
 	
 				this.raf = requestAnimationFrame(function () {
-					return _this3.startAnimation();
+					return _this4.startAnimation();
 				});
 				this.render();
 			}

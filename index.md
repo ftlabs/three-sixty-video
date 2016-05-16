@@ -102,6 +102,8 @@ It relies heavily on the [WebVR polyfill](https://github.com/borismus/webvr-poly
 
 This is a prototype and still has some usability issues to hammer out but it shows that VR is the kind of thing which goes ideal in the web.
 
+There seems to be a cors issue with the Service Worker as well, if this is an issue with you use ctrl+reload to bypass the service worker.
+
 The source code is here:
 
 https://github.com/adaroseedwards/three-sixty-video

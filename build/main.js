@@ -58,10 +58,14 @@
 		video.loop = true;
 	})();
 	
-	var videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
-	[].slice.call(videoContainer).map(function (el) {
-		return new ThreeSixtyVideo(el);
-	});
+	if (navigator.userAgent.match(/samsung.* mobile vr/ig)) {
+		console.log('360 Video handled natively');
+	} else {
+		var videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
+		[].slice.call(videoContainer).map(function (el) {
+			return new ThreeSixtyVideo(el);
+		});
+	}
 
 /***/ },
 /* 1 */
@@ -209,6 +213,7 @@
 			this.scene = new THREE.Scene();
 	
 			var renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: preserveDrawingBuffer });
+			renderer.context.disable(renderer.context.DEPTH_TEST);
 			renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
 			renderer.setSize(rect.width, rect.height);
 			renderer.autoClear = false;
@@ -294,6 +299,7 @@
 	
 					this.renderer.setSize(Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2, Math.max(leftEye.renderHeight, rightEye.renderHeight));
 				} else {
+					this.camera.aspect = this.video.width / this.video.height;
 					this.renderer.setSize(this.video.width, this.video.height);
 				}
 			}

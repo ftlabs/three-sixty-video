@@ -124,6 +124,7 @@ class ThreeSixtyVideo {
 		this.scene = new THREE.Scene();
 
 		const renderer = new THREE.WebGLRenderer( { antialias: false, preserveDrawingBuffer } );
+		renderer.context.disable(renderer.context.DEPTH_TEST);
 		renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
 		renderer.setSize( rect.width, rect.height );
 		renderer.autoClear = false;
@@ -206,6 +207,7 @@ class ThreeSixtyVideo {
 				Math.max(leftEye.renderHeight, rightEye.renderHeight)
 			);
 		} else {
+			this.camera.aspect = this.video.width / this.video.height;
 			this.renderer.setSize( this.video.width, this.video.height );
 		}
 	}

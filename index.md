@@ -4,7 +4,7 @@ style1: css/ada-rose.css
 style2: build/main.css
 style3: css/highlight.css
 link: https://ada.is/three-sixty-video
-image: images/muaythai.jpg
+image: https://ada.is/three-sixty-video/images/raw.jpg
 title: 360 degree video in the web
 date: Monday May 16th 2016
 description: 360 degree video spheres in the Web with Web VR. New cameras and the advent of VR heralds a new era of immersive video experiences.

@@ -31,11 +31,26 @@ h2 a {
 	text-decoration: none;
 }
 .title {
-	border-bottom: 1px solid #ccc;
 	background: url(./images/pattern.svg);
 	background-size: cover;
 	margin: 0;
 	padding: 2em 1em 1em 1em;
+    position: relative;
+    border-bottom: 1px solid grey;
+
+	&:after {
+		content: '';
+		position: absolute;
+		bottom: -1em;
+		height: 2em;
+		width: 2em;
+		background: lavenderblush;
+		border: 1px solid grey;
+		border-width: 1px 0 0 1px;
+		transform: rotate(45deg);
+		left: 3em;
+		font-size: 12px;
+	}
 }
 .title h1 {
 	font-size: 2em;

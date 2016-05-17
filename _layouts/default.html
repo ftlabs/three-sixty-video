@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,800' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-grid@^4.0.0" />
+		<meta http-equiv="cleartype" content="on" />
+		<meta name="MobileOptimized" content="width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta charset="UTF-8">
+		<title>{{ page.title }}</title>
+		{% if page.image %}
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:image" content="{{ page.image }}">
+		{% else %}
+		<meta name="twitter:card" content="summary">
+		{% endif %}
+		<meta name="twitter:site" content="@lady_ada_king">
+		<meta name="twitter:creator" content="@lady_ada_king">
+		{% if page.title %}
+			<meta name="twitter:title" content="{{ page.title }}">
+		{% else %}
+			<meta name="twitter:title" content="Article by Ada Rose Edwards">
+		{% endif %}
+		{% if page.link %}
+			<meta name="twitter:url" content="{{ page.link }}">
+		{% endif %}
+		{% if page.description %}
+			<meta name="description" content="{{ page.description }}">
+			<meta name="twitter:description" content="{{ page.description }}">
+		{% endif %}
+		{% if page.script %}
+		<script src="{{page.script}}"></script>
+		{% endif %}
+		{% if page.script1 %}
+		<script src="{{page.script1}}"></script>
+		{% endif %}
+		{% if page.script2 %}
+		<script src="{{page.script2}}"></script>
+		{% endif %}
+		{% if page.script3 %}
+		<script src="{{page.script3}}"></script>
+		{% endif %}
+		{% if page.style %}
+		<link href="{{ page.style }}" rel="stylesheet" />
+		{% endif %}
+		{% if page.style1 %}
+		<link href="{{ page.style1 }}" rel="stylesheet" />
+		{% endif %}
+		{% if page.style2 %}
+		<link href="{{ page.style2 }}" rel="stylesheet" />
+		{% endif %}
+		{% if page.style3 %}
+		<link href="{{ page.style3 }}" rel="stylesheet" />
+		{% endif %}
+	</head>
+	<body>
+		<div class="title">
+			<h1 style="display: inline-block;">{{ page.title }}</h1><br />
+			<div style="display:inline-flex; align-items:center; justify-content: space-around; flex-wrap: wrap-reverse; flex-direction: column;">
+				<span>By <a href="https://ada.is">Ada Rose Edwards</a>, <date>{{ page.date }}</date></span>
+				<p><a href="https://twitter.com/Lady_Ada_King" style="display: none;" class="twitter-follow-button" data-show-count="true" data-size="large" data-dnt="true">Follow @Lady_Ada_King</a></p>
+			</div>
+		</div>
+		<div class="o-grid-container"><div class="o-grid-row">
+			<article data-o-grid-colspan="center 12 M11 L9">
+{{ content }}
+			</article>
+		</div></div>
+		<footer>
+			2016 - Ada Rose Edwards <span style="float: right;"><a href="https://twitter.com/Lady_Ada_King" class="twitter-follow-button" data-show-count="true" data-size="large" data-dnt="true">Follow @Lady_Ada_King</a></span>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		</footer>
+	</body>
+</html>

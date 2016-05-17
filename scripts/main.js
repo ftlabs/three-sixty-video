@@ -7,6 +7,10 @@ const ThreeSixtyVideo = require('./three-sixty-video');
 	video.loop = true;
 }());
 
-const videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
-[].slice.call(videoContainer)
-.map(el => new ThreeSixtyVideo(el));
+if (navigator.userAgent.match(/samsung.* mobile vr/ig)) {
+	console.log('360 Video handled natively');
+} else {
+	const videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
+	[].slice.call(videoContainer)
+	.map(el => new ThreeSixtyVideo(el));
+}

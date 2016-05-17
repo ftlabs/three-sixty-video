@@ -1,6 +1,7 @@
 ---
 layout: default
-style1: css/ada-rose.css
+author: <a href="https://twitter.com/lady_ada_king" style="color:white;">Ada Rose Edwards</a>
+style1: css/ft.css
 style2: build/main.css
 style3: css/highlight.css
 link: https://ada.is/three-sixty-video

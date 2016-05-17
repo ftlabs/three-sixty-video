@@ -3,7 +3,7 @@
 	<head>
 		<link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
 		<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,800' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-grid@^4.0.0" />
+		<link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-grid@^4.0.0,o-fonts@^2.1.2,o-colors@^3.3.2" />
 		<meta http-equiv="cleartype" content="on" />
 		<meta name="MobileOptimized" content="width" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui" />
@@ -16,12 +16,12 @@
 		{% else %}
 		<meta name="twitter:card" content="summary">
 		{% endif %}
-		<meta name="twitter:site" content="@lady_ada_king">
-		<meta name="twitter:creator" content="@lady_ada_king">
+		<meta name="twitter:site" content="@ftlabs">
+		<meta name="twitter:creator" content="@ftlabs">
 		{% if page.title %}
 			<meta name="twitter:title" content="{{ page.title }}">
 		{% else %}
-			<meta name="twitter:title" content="Article by Ada Rose Edwards">
+			<meta name="twitter:title" content="Article by FTLabs">
 		{% endif %}
 		{% if page.link %}
 			<meta name="twitter:url" content="{{ page.link }}">
@@ -56,21 +56,17 @@
 		{% endif %}
 	</head>
 	<body>
-		<div class="title">
-			<h1 style="display: inline-block;">{{ page.title }}</h1><br />
-			<div style="display:inline-flex; align-items:center; justify-content: space-around; flex-wrap: wrap-reverse; flex-direction: column;">
-				<span>By <a href="https://ada.is">Ada Rose Edwards</a>, <date>{{ page.date }}</date></span>
-				<p><a href="https://twitter.com/Lady_Ada_King" style="display: none;" class="twitter-follow-button" data-show-count="true" data-size="large" data-dnt="true">Follow @Lady_Ada_King</a></p>
-			</div>
+		<div class="title o-colors-product-brand-background">
+			<h1 style="display: inline-block;">{{ page.title }}</h1>
+			<h3 style="display: inline-block;">by {{ page.author }}</h3>
 		</div>
 		<div class="o-grid-container"><div class="o-grid-row">
-			<article data-o-grid-colspan="center 12 M11 L9">
+			<article data-o-grid-colspan="center 12 M11 L9" class="o-colors-body-text">
 {{ content }}
 			</article>
 		</div></div>
 		<footer>
-			2016 - Ada Rose Edwards <span style="float: right;"><a href="https://twitter.com/Lady_Ada_King" class="twitter-follow-button" data-show-count="true" data-size="large" data-dnt="true">Follow @Lady_Ada_King</a></span>
-				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			2016 - FTLabs
 		</footer>
 	</body>
 </html>

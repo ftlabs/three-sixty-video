@@ -97,7 +97,7 @@ With the Gear VR and Google Cardboard v2.
 It relies heavily on the [WebVR polyfill](https://github.com/borismus/webvr-polyfill) so should work on iPhones. It should also work on WebVR enabled desktop browsers with supported headsets.
 
 ![VR headsets](./images/vr.jpg)
-*Google Cardboard (front) and Samsung Gear (rear)*
+*Google Cardboard (front) and Samsung Gear VR (rear)*
 
 ## Conclusion
 

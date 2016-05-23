@@ -8,6 +8,11 @@ span.three-sixty-video-container {
 	display: inline-block;
     position: relative;
 
+	canvas {
+		max-width: 100vw;
+		max-height: 100vh;
+	}
+
 	.button-container {
 		position: absolute;
 		bottom: 0;

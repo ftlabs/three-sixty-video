@@ -1,8 +1,8 @@
 'use strict';
 
 window.WebVRConfig = {
-  BUFFER_SCALE: 1,
-  CARDBOARD_UI_DISABLED: true,
+  BUFFER_SCALE: 0.5,
+  CARDBOARD_UI_DISABLED: true
 };
 
 const THREE = require('three');
@@ -166,7 +166,7 @@ class ThreeSixtyVideo {
 					window.addEventListener('vrdisplaypresentchange', () => this.onVRPresentChange(), false);
 				}
 			});
-			preserveDrawingBuffer = true;
+			// preserveDrawingBuffer = true;
 		} else if (navigator.getVRDevices) {
 			console.error('Your browser supports WebVR but not the latest version. See <a href=\'http://webvr.info\'>webvr.info</a> for more info.');
 		} else {
@@ -182,7 +182,7 @@ class ThreeSixtyVideo {
 		video.style.display = 'none';
 		this.video = video;
 
-		this.camera = new THREE.PerspectiveCamera( 90, rect.width / rect.height, 1, 100 );
+		this.camera = new THREE.PerspectiveCamera( 90, rect.width / rect.height, 1, 10000 );
 		this.camera.up.set( 0, 0, 1 );
 		this.scene = new THREE.Scene();
 		this.orientation = new THREE.Quaternion([0,0,0,1]);
@@ -211,16 +211,21 @@ class ThreeSixtyVideo {
 
 		this.renderer.domElement.addEventListener('click', e => {
 			if (!this.hasVideoTexture) return;
+			e.preventDefault();
 			if (this.video.paused) {
-				this.removeButton(this.playButton);
-				this.playButton = null;
 				this.updateTexture(this.videoTexture);
 				this.video.play();
+				this.removeButton(this.playButton);
+				this.playButton = null;
 			} else {
 				this.addPlayButton();
 				this.video.pause();
 			}
+		});
+
+		this.renderer.domElement.addEventListener('touchmove', e => {
 			e.preventDefault();
+			return false;
 		});
 	}
 
@@ -271,7 +276,7 @@ class ThreeSixtyVideo {
 		}
 
 		const material = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
-		const geometry = new THREE.SphereGeometry( 50, 64, 32 );
+		const geometry = new THREE.SphereGeometry( 5000, 64, 32 );
 
 		const mS = (new THREE.Matrix4()).identity();
 		mS.elements[0] = -1;

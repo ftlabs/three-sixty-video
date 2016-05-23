@@ -1,7 +1,8 @@
 'use strict';
 
 window.WebVRConfig = {
-  BUFFER_SCALE: 0.5,
+  BUFFER_SCALE: 1,
+  CARDBOARD_UI_DISABLED: true,
 };
 
 const THREE = require('three');
@@ -9,13 +10,11 @@ require('webvr-polyfill');
 
 // from THREE.js
 function fovToNDCScaleOffset( fov ) {
-
 	const pxscale = 2.0 / ( fov.leftTan + fov.rightTan );
 	const pxoffset = ( fov.leftTan - fov.rightTan ) * pxscale * 0.5;
 	const pyscale = 2.0 / ( fov.upTan + fov.downTan );
 	const pyoffset = ( fov.upTan - fov.downTan ) * pyscale * 0.5;
 	return { scale: [ pxscale, pyscale ], offset: [ pxoffset, pyoffset ] };
-
 }
 
 // from THREE.js
@@ -63,7 +62,17 @@ function fovPortToProjection( fov, rightHanded, zNear, zFar ) {
 	mobj.transpose();
 
 	return mobj;
+}
 
+const rotWorldMatrix = new THREE.Matrix4();
+const xAxis = new THREE.Vector3(1,0,0);
+const yAxis = new THREE.Vector3(0,1,0);
+const zAxis = new THREE.Vector3(0,0,1);
+function rotateAroundWorldAxis(object, axis, radians) {
+    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+    rotWorldMatrix.multiply(object.matrix);
+    object.matrix = rotWorldMatrix;
+    object.rotation.setFromRotationMatrix(object.matrix);
 }
 
 // from THREE.js
@@ -79,13 +88,69 @@ function fovToProjection( fov, rightHanded, zNear, zFar ) {
 	};
 
 	return fovPortToProjection( fovPort, rightHanded, zNear, zFar );
-
 }
 
 class ThreeSixtyVideo {
-	constructor (videoContainer) {
+	constructor (video) {
 
 		let preserveDrawingBuffer = false;
+
+		this.buttonContainer = document.createElement('div');
+		this.buttonContainer.classList.add('button-container');
+
+		this.latOffset = video.dataset.threeSixtyVideoLat || 0;
+		this.longOffset = video.dataset.threeSixtyVideoLong || 0;
+
+		const videoContainer = document.createElement('span');
+		video.parentNode.insertBefore(videoContainer, video);
+		videoContainer.appendChild(video);
+		videoContainer.classList.add('three-sixty-video-container');
+
+		videoContainer.appendChild(this.buttonContainer);
+
+		this.videoContainer = videoContainer;
+		this.fullscreen = this.videoContainer.requestFullscreen || this.videoContainer.mozRequestFullscreen || this.videoContainer.webkitRequestFullscreen;
+
+		if (document.isFullScreen !== undefined) {
+			this.addButton('Full Screen', 'F', 'full-screen', function () {
+				this.fullscreen.bind(this.videoContainer)();
+			});
+			document.addEventListener('fullscreenchange', function() {
+				if ( document.isFullScreen ) {
+					if (document.fullscreenElement === this.videoContainer) {
+						setTimeout(() => this.resize(true), 500);
+					}
+				} else {
+					setTimeout(() => this.resize(), 500);
+				}
+			}.bind(this));
+		} else if (document.webkitIsFullScreen !== undefined) {
+			this.addButton('Full Screen', 'F', 'full-screen', function () {
+				this.fullscreen.bind(this.videoContainer)();
+			});
+			document.addEventListener('webkitfullscreenchange', function() {
+				if ( document.webkitIsFullScreen ) {
+					if (document.webkitFullscreenElement === this.videoContainer) {
+						setTimeout(() => this.resize(true), 500);
+					}
+				} else {
+					setTimeout(() => this.resize(), 500);
+				}
+			}.bind(this));
+		} else if (document.mozIsFullScreen !== undefined) {
+			this.addButton('Full Screen', 'F', 'full-screen', function () {
+				this.fullscreen.bind(this.videoContainer)();
+			});
+			document.addEventListener('mozfullscreenchange', function() {
+				if ( document.mozIsFullScreen ) {
+					if (document.mozFullscreenElement === this.videoContainer) {
+						setTimeout(() => this.resize(true), 500);
+					}
+				} else {
+					setTimeout(() => this.resize(), 500);
+				}
+			}.bind(this));
+		}
 
 		if (navigator.getVRDisplays) {
 			navigator.getVRDisplays()
@@ -104,17 +169,11 @@ class ThreeSixtyVideo {
 			console.error('Your browser does not support WebVR. See <a href=\'http://webvr.info\'>webvr.info</a> for assistance.');
 		}
 
-		this.buttonContainer = document.createElement('div');
-		this.buttonContainer.classList.add('button-container');
-		videoContainer.appendChild(this.buttonContainer);
-
 		this.camera;
 		this.scene;
 		this.renderer;
-		this.videoContainer = videoContainer;
 		this.vrDisplay = null;
 		this.vrPresentButton;
-		const video = videoContainer.getElementsByTagName('video')[0];
 		const rect = video.getBoundingClientRect();
 		video.style.display = 'none';
 		this.video = video;
@@ -122,6 +181,7 @@ class ThreeSixtyVideo {
 		this.camera = new THREE.PerspectiveCamera( 90, rect.width / rect.height, 1, 100 );
 		this.camera.up.set( 0, 0, 1 );
 		this.scene = new THREE.Scene();
+		this.orientation = new THREE.Quaternion([0,0,0,1]);
 
 		const renderer = new THREE.WebGLRenderer( { antialias: false, preserveDrawingBuffer } );
 		renderer.context.disable(renderer.context.DEPTH_TEST);
@@ -145,7 +205,7 @@ class ThreeSixtyVideo {
 			}.bind(this));
 		}
 
-		this.renderer.domElement.addEventListener('click', () => {
+		this.renderer.domElement.addEventListener('click', e => {
 			if (!this.hasVideoTexture) return;
 			if (this.video.paused) {
 				this.removeButton(this.playButton);
@@ -156,8 +216,8 @@ class ThreeSixtyVideo {
 				this.addPlayButton();
 				this.video.pause();
 			}
+			e.preventDefault();
 		});
-
 	}
 
 	addPlayButton() {
@@ -202,7 +262,7 @@ class ThreeSixtyVideo {
 			loader.crossOrigin = 'Anonymous';
 			loader.load(
 				poster,
-				t => (!this.hasVideoTexture || this.currentTexture !== this.VideoTexture) && this.updateTexture(t)
+				t => (!this.hasVideoTexture || this.currentTexture !== this.videoTexture) && this.updateTexture(t)
 			);
 		}
 
@@ -214,11 +274,13 @@ class ThreeSixtyVideo {
 		geometry.applyMatrix(mS);
 
 		const sphere = new THREE.Mesh( geometry, material );
+		rotateAroundWorldAxis(sphere, zAxis, -this.longOffset);
+		rotateAroundWorldAxis(sphere, yAxis, -this.latOffset);
 		this.sphere = sphere;
 		this.scene.add( sphere );
 	}
 
-	resize() {
+	resize(fullscreen) {
 
 		if (this.vrDisplay && this.vrDisplay.isPresenting) {
 
@@ -230,6 +292,12 @@ class ThreeSixtyVideo {
 			this.renderer.setSize(
 				Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
 				Math.max(leftEye.renderHeight, rightEye.renderHeight)
+			);
+		} else if (fullscreen) {
+			this.camera.aspect = window.innerWidth / window.innerHeight;
+			this.renderer.setSize(
+				window.innerWidth,
+				window.innerHeight
 			);
 		} else {
 			this.camera.aspect = this.video.width / this.video.height;
@@ -257,7 +325,8 @@ class ThreeSixtyVideo {
 			position = [0, 0, 0];
 		}
 		this.camera.position.fromArray(position);
-		this.camera.rotation.setFromQuaternion(new THREE.Quaternion(...orientation), 'XZY');
+		this.orientation.set(...orientation);
+		this.camera.rotation.setFromQuaternion(this.orientation, 'XZY');
 		if (eye) {
 			this.camera.projectionMatrix = fovToProjection(eye.fieldOfView, true, this.camera.near, this.camera.far );
 			this.camera.position.add(new THREE.Vector3(...eye.offset));
@@ -315,19 +384,7 @@ class ThreeSixtyVideo {
 
 	onVRPresentChange () {
 		this.resize();
-		if (this.vrDisplay.isPresenting) {
-			if (this.vrDisplay.capabilities.hasExternalDisplay) {
-				this.removeButton(this.vrPresentButton);
-				this.vrPresentButton = this.addButton('Exit VR', 'E', 'cardboard-icon', this.onVRExitPresent);
-			}
-		} else {
-			if (this.vrDisplay.capabilities.hasExternalDisplay) {
-				this.removeButton(this.vrPresentButton);
-				this.vrPresentButton = this.addButton('Enter VR', 'E', 'cardboard-icon', this.onVRRequestPresent);
-			}
-		}
 	}
-
 
 	addButton(text, shortcut, classname, callback) {
 		const button = document.createElement('button');

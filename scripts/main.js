@@ -2,15 +2,10 @@
 
 const ThreeSixtyVideo = require('./three-sixty-video');
 
-(function () {
-	const video = document.getElementsByTagName('video')[0];
-	video.loop = true;
-}());
-
 if (navigator.userAgent.match(/samsung.* mobile vr/ig)) {
 	console.log('360 Video handled natively');
 } else {
-	const videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
-	[].slice.call(videoContainer)
+	const videos = document.querySelectorAll('*[data-three-sixty-video]');
+	[].slice.call(videos)
 	.map(el => new ThreeSixtyVideo(el));
 }

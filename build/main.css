@@ -5,10 +5,10 @@
   font-weight: normal;
   font-style: normal; }
 
-*[data-three-sixty-video] {
+span.three-sixty-video-container {
   display: inline-block;
   position: relative; }
-  *[data-three-sixty-video] .button-container {
+  span.three-sixty-video-container .button-container {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -16,8 +16,10 @@
     right: 0;
     padding: 0.5em;
     text-align: right;
-    vertical-align: bottom; }
-    *[data-three-sixty-video] .button-container button {
+    vertical-align: bottom;
+    pointer-events: none; }
+    span.three-sixty-video-container .button-container button {
+      pointer-events: auto;
       display: inline-block;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
@@ -52,24 +54,24 @@
       color: #2bbbbf;
       background-color: rgba(29, 29, 29, 0.5);
       border-color: rgba(39, 117, 123, 0.8); }
-      *[data-three-sixty-video] .button-container button[aria-selected=true], *[data-three-sixty-video] .button-container button[aria-pressed=true] {
+      span.three-sixty-video-container .button-container button[aria-selected=true], span.three-sixty-video-container .button-container button[aria-pressed=true] {
         color: #fff1e0;
         background-color: #214043 !important;
         border-color: rgba(39, 117, 123, 0.8); }
-      *[data-three-sixty-video] .button-container button:not([disabled]):focus:not(:hover),
-      .o-hoverable-on *[data-three-sixty-video] .button-container button:not([disabled]):hover {
+      span.three-sixty-video-container .button-container button:not([disabled]):focus:not(:hover),
+      .o-hoverable-on span.three-sixty-video-container .button-container button:not([disabled]):hover {
         background-color: #1f3030;
         border-color: rgba(43, 187, 191, 0.6); }
-      *[data-three-sixty-video] .button-container button:not([disabled]):active {
+      span.three-sixty-video-container .button-container button:not([disabled]):active {
         color: #fff1e0; }
-      *[data-three-sixty-video] .button-container button[disabled] {
+      span.three-sixty-video-container .button-container button[disabled] {
         pointer-events: none;
         opacity: 0.4;
         cursor: default; }
-      *[data-three-sixty-video] .button-container button::-moz-focus-inner {
+      span.three-sixty-video-container .button-container button::-moz-focus-inner {
         border: 0;
         padding: 0; }
-      *[data-three-sixty-video] .button-container button.play-icon {
+      span.three-sixty-video-container .button-container button.play-icon {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -94,7 +96,7 @@
         background-position: 50%;
         background-color: transparent;
         vertical-align: middle; }
-      *[data-three-sixty-video] .button-container button.cardboard-icon:before {
+      span.three-sixty-video-container .button-container button.cardboard-icon:before {
         display: inline-block;
         content: '';
         width: 1.5em;

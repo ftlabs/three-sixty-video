@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "scripts/index.js",
   "scripts": {
-    "watch": "./parallel.sh 'http-server -c-1' 'nodemon --watch ./scripts --watch ./scss -e js,scss --exec npm run build'",
+    "watch": "./parallel.sh 'bundle exec jekyll serve' 'nodemon --watch ./scripts --watch ./scss -e js,scss --exec npm run build'",
     "build": "origami-build-tools build --js=scripts/main.js --sass=scss/main.scss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

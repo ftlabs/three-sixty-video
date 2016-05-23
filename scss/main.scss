@@ -4,7 +4,7 @@ $o-buttons-is-silent: true;
 
 @include oFtIconsFontFace();
 
-*[data-three-sixty-video] {
+span.three-sixty-video-container {
 	display: inline-block;
     position: relative;
 
@@ -17,9 +17,11 @@ $o-buttons-is-silent: true;
 		padding: 0.5em;
 		text-align: right;
 		vertical-align: bottom;
+		pointer-events: none;
 
 		button {
 
+			pointer-events: auto;
 			@include oButtons(big, inverse);
 
 			&.play-icon {

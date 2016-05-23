@@ -53,16 +53,11 @@
 	
 	var ThreeSixtyVideo = __webpack_require__(1);
 	
-	(function () {
-		var video = document.getElementsByTagName('video')[0];
-		video.loop = true;
-	})();
-	
 	if (navigator.userAgent.match(/samsung.* mobile vr/ig)) {
 		console.log('360 Video handled natively');
 	} else {
-		var videoContainer = document.querySelectorAll('*[data-three-sixty-video]');
-		[].slice.call(videoContainer).map(function (el) {
+		var videos = document.querySelectorAll('*[data-three-sixty-video]');
+		[].slice.call(videos).map(function (el) {
 			return new ThreeSixtyVideo(el);
 		});
 	}
@@ -87,7 +82,8 @@
 	'use strict';
 	
 	window.WebVRConfig = {
-		BUFFER_SCALE: 0.5
+		BUFFER_SCALE: 1,
+		CARDBOARD_UI_DISABLED: true
 	};
 	
 	var THREE = __webpack_require__(45);
@@ -95,7 +91,6 @@
 	
 	// from THREE.js
 	function fovToNDCScaleOffset(fov) {
-	
 		var pxscale = 2.0 / (fov.leftTan + fov.rightTan);
 		var pxoffset = (fov.leftTan - fov.rightTan) * pxscale * 0.5;
 		var pyscale = 2.0 / (fov.upTan + fov.downTan);
@@ -150,6 +145,17 @@
 		return mobj;
 	}
 	
+	var rotWorldMatrix = new THREE.Matrix4();
+	var xAxis = new THREE.Vector3(1, 0, 0);
+	var yAxis = new THREE.Vector3(0, 1, 0);
+	var zAxis = new THREE.Vector3(0, 0, 1);
+	function rotateAroundWorldAxis(object, axis, radians) {
+		rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+		rotWorldMatrix.multiply(object.matrix);
+		object.matrix = rotWorldMatrix;
+		object.rotation.setFromRotationMatrix(object.matrix);
+	}
+	
 	// from THREE.js
 	function fovToProjection(fov, rightHanded, zNear, zFar) {
 	
@@ -166,23 +172,98 @@
 	}
 	
 	var ThreeSixtyVideo = (function () {
-		function ThreeSixtyVideo(videoContainer) {
-			var _this = this;
+		function ThreeSixtyVideo(video) {
+			var _this4 = this;
 	
 			_classCallCheck(this, ThreeSixtyVideo);
 	
 			var preserveDrawingBuffer = false;
 	
+			this.buttonContainer = document.createElement('div');
+			this.buttonContainer.classList.add('button-container');
+	
+			this.latOffset = video.dataset.threeSixtyVideoLat || 0;
+			this.longOffset = video.dataset.threeSixtyVideoLong || 0;
+	
+			var videoContainer = document.createElement('span');
+			video.parentNode.insertBefore(videoContainer, video);
+			videoContainer.appendChild(video);
+			videoContainer.classList.add('three-sixty-video-container');
+	
+			videoContainer.appendChild(this.buttonContainer);
+	
+			this.videoContainer = videoContainer;
+			this.fullscreen = this.videoContainer.requestFullscreen || this.videoContainer.mozRequestFullscreen || this.videoContainer.webkitRequestFullscreen;
+	
+			if (document.isFullScreen !== undefined) {
+				this.addButton('Full Screen', 'F', 'full-screen', function () {
+					this.fullscreen.bind(this.videoContainer)();
+				});
+				document.addEventListener('fullscreenchange', (function () {
+					var _this = this;
+	
+					if (document.isFullScreen) {
+						if (document.fullscreenElement === this.videoContainer) {
+							setTimeout(function () {
+								return _this.resize(true);
+							}, 500);
+						}
+					} else {
+						setTimeout(function () {
+							return _this.resize();
+						}, 500);
+					}
+				}).bind(this));
+			} else if (document.webkitIsFullScreen !== undefined) {
+				this.addButton('Full Screen', 'F', 'full-screen', function () {
+					this.fullscreen.bind(this.videoContainer)();
+				});
+				document.addEventListener('webkitfullscreenchange', (function () {
+					var _this2 = this;
+	
+					if (document.webkitIsFullScreen) {
+						if (document.webkitFullscreenElement === this.videoContainer) {
+							setTimeout(function () {
+								return _this2.resize(true);
+							}, 500);
+						}
+					} else {
+						setTimeout(function () {
+							return _this2.resize();
+						}, 500);
+					}
+				}).bind(this));
+			} else if (document.mozIsFullScreen !== undefined) {
+				this.addButton('Full Screen', 'F', 'full-screen', function () {
+					this.fullscreen.bind(this.videoContainer)();
+				});
+				document.addEventListener('mozfullscreenchange', (function () {
+					var _this3 = this;
+	
+					if (document.mozIsFullScreen) {
+						if (document.mozFullscreenElement === this.videoContainer) {
+							setTimeout(function () {
+								return _this3.resize(true);
+							}, 500);
+						}
+					} else {
+						setTimeout(function () {
+							return _this3.resize();
+						}, 500);
+					}
+				}).bind(this));
+			}
+	
 			if (navigator.getVRDisplays) {
 				navigator.getVRDisplays().then(function (displays) {
 					if (displays.length > 0) {
-						_this.vrDisplay = displays[0];
-						_this.addButton('Reset', 'R', null, function () {
+						_this4.vrDisplay = displays[0];
+						_this4.addButton('Reset', 'R', null, function () {
 							this.vrDisplay.resetPose();
 						});
-						if (_this.vrDisplay.capabilities.canPresent) _this.vrPresentButton = _this.addButton('Enter VR', 'E', 'cardboard-icon', _this.onVRRequestPresent);
+						if (_this4.vrDisplay.capabilities.canPresent) _this4.vrPresentButton = _this4.addButton('Enter VR', 'E', 'cardboard-icon', _this4.onVRRequestPresent);
 						window.addEventListener('vrdisplaypresentchange', function () {
-							return _this.onVRPresentChange();
+							return _this4.onVRPresentChange();
 						}, false);
 					}
 				});
@@ -193,17 +274,11 @@
 				console.error('Your browser does not support WebVR. See <a href=\'http://webvr.info\'>webvr.info</a> for assistance.');
 			}
 	
-			this.buttonContainer = document.createElement('div');
-			this.buttonContainer.classList.add('button-container');
-			videoContainer.appendChild(this.buttonContainer);
-	
 			this.camera;
 			this.scene;
 			this.renderer;
-			this.videoContainer = videoContainer;
 			this.vrDisplay = null;
 			this.vrPresentButton;
-			var video = videoContainer.getElementsByTagName('video')[0];
 			var rect = video.getBoundingClientRect();
 			video.style.display = 'none';
 			this.video = video;
@@ -211,6 +286,7 @@
 			this.camera = new THREE.PerspectiveCamera(90, rect.width / rect.height, 1, 100);
 			this.camera.up.set(0, 0, 1);
 			this.scene = new THREE.Scene();
+			this.orientation = new THREE.Quaternion([0, 0, 0, 1]);
 	
 			var renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: preserveDrawingBuffer });
 			renderer.context.disable(renderer.context.DEPTH_TEST);
@@ -234,31 +310,32 @@
 				}).bind(this));
 			}
 	
-			this.renderer.domElement.addEventListener('click', function () {
-				if (!_this.hasVideoTexture) return;
-				if (_this.video.paused) {
-					_this.removeButton(_this.playButton);
-					_this.playButton = null;
-					_this.updateTexture(_this.videoTexture);
-					_this.video.play();
+			this.renderer.domElement.addEventListener('click', function (e) {
+				if (!_this4.hasVideoTexture) return;
+				if (_this4.video.paused) {
+					_this4.removeButton(_this4.playButton);
+					_this4.playButton = null;
+					_this4.updateTexture(_this4.videoTexture);
+					_this4.video.play();
 				} else {
-					_this.addPlayButton();
-					_this.video.pause();
+					_this4.addPlayButton();
+					_this4.video.pause();
 				}
+				e.preventDefault();
 			});
 		}
 	
 		_createClass(ThreeSixtyVideo, [{
 			key: 'addPlayButton',
 			value: function addPlayButton() {
-				var _this2 = this;
+				var _this5 = this;
 	
 				if (this.playButton) return;
 				this.playButton = this.addButton('Play', 'space', 'play-icon', function (e) {
-					_this2.removeButton(_this2.playButton);
-					_this2.playButton = null;
-					if (_this2.hasVideoTexture) _this2.updateTexture(_this2.videoTexture);
-					_this2.video.play();
+					_this5.removeButton(_this5.playButton);
+					_this5.playButton = null;
+					if (_this5.hasVideoTexture) _this5.updateTexture(_this5.videoTexture);
+					_this5.video.play();
 					e.stopPropagation();
 				});
 			}
@@ -286,7 +363,7 @@
 		}, {
 			key: 'addGeometry',
 			value: function addGeometry() {
-				var _this3 = this;
+				var _this6 = this;
 	
 				if (this.sphere) {
 					throw Error('Geometery already set up');
@@ -297,7 +374,7 @@
 					var loader = new THREE.TextureLoader();
 					loader.crossOrigin = 'Anonymous';
 					loader.load(poster, function (t) {
-						return (!_this3.hasVideoTexture || _this3.currentTexture !== _this3.VideoTexture) && _this3.updateTexture(t);
+						return (!_this6.hasVideoTexture || _this6.currentTexture !== _this6.videoTexture) && _this6.updateTexture(t);
 					});
 				}
 	
@@ -309,12 +386,14 @@
 				geometry.applyMatrix(mS);
 	
 				var sphere = new THREE.Mesh(geometry, material);
+				rotateAroundWorldAxis(sphere, zAxis, -this.longOffset);
+				rotateAroundWorldAxis(sphere, yAxis, -this.latOffset);
 				this.sphere = sphere;
 				this.scene.add(sphere);
 			}
 		}, {
 			key: 'resize',
-			value: function resize() {
+			value: function resize(fullscreen) {
 	
 				if (this.vrDisplay && this.vrDisplay.isPresenting) {
 	
@@ -324,6 +403,9 @@
 					var rightEye = this.vrDisplay.getEyeParameters('right');
 	
 					this.renderer.setSize(Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2, Math.max(leftEye.renderHeight, rightEye.renderHeight));
+				} else if (fullscreen) {
+					this.camera.aspect = window.innerWidth / window.innerHeight;
+					this.renderer.setSize(window.innerWidth, window.innerHeight);
 				} else {
 					this.camera.aspect = this.video.width / this.video.height;
 					this.renderer.setSize(this.video.width, this.video.height);
@@ -338,16 +420,18 @@
 		}, {
 			key: 'startAnimation',
 			value: function startAnimation() {
-				var _this4 = this;
+				var _this7 = this;
 	
 				this.raf = requestAnimationFrame(function () {
-					return _this4.startAnimation();
+					return _this7.startAnimation();
 				});
 				this.render();
 			}
 		}, {
 			key: 'renderSceneView',
 			value: function renderSceneView(pose, eye) {
+				var _orientation;
+	
 				var orientation = pose.orientation;
 				var position = pose.position;
 				if (!orientation) {
@@ -357,7 +441,8 @@
 					position = [0, 0, 0];
 				}
 				this.camera.position.fromArray(position);
-				this.camera.rotation.setFromQuaternion(new (_bind.apply(THREE.Quaternion, [null].concat(_toConsumableArray(orientation))))(), 'XZY');
+				(_orientation = this.orientation).set.apply(_orientation, _toConsumableArray(orientation));
+				this.camera.rotation.setFromQuaternion(this.orientation, 'XZY');
 				if (eye) {
 					this.camera.projectionMatrix = fovToProjection(eye.fieldOfView, true, this.camera.near, this.camera.far);
 					this.camera.position.add(new (_bind.apply(THREE.Vector3, [null].concat(_toConsumableArray(eye.offset))))());
@@ -417,17 +502,6 @@
 			key: 'onVRPresentChange',
 			value: function onVRPresentChange() {
 				this.resize();
-				if (this.vrDisplay.isPresenting) {
-					if (this.vrDisplay.capabilities.hasExternalDisplay) {
-						this.removeButton(this.vrPresentButton);
-						this.vrPresentButton = this.addButton('Exit VR', 'E', 'cardboard-icon', this.onVRExitPresent);
-					}
-				} else {
-					if (this.vrDisplay.capabilities.hasExternalDisplay) {
-						this.removeButton(this.vrPresentButton);
-						this.vrPresentButton = this.addButton('Enter VR', 'E', 'cardboard-icon', this.onVRRequestPresent);
-					}
-				}
 			}
 		}, {
 			key: 'addButton',

@@ -209,7 +209,7 @@
 					if (document.isFullScreen) {
 						if (document.fullscreenElement === this.videoContainer) {
 							setTimeout(function () {
-								return _this.resize(true);
+								return _this.resize();
 							}, 500);
 						}
 					} else {
@@ -228,7 +228,7 @@
 					if (document.webkitIsFullScreen) {
 						if (document.webkitFullscreenElement === this.videoContainer) {
 							setTimeout(function () {
-								return _this2.resize(true);
+								return _this2.resize();
 							}, 500);
 						}
 					} else {
@@ -247,7 +247,7 @@
 					if (document.mozIsFullScreen) {
 						if (document.mozFullscreenElement === this.videoContainer) {
 							setTimeout(function () {
-								return _this3.resize(true);
+								return _this3.resize();
 							}, 500);
 						}
 					} else {
@@ -397,7 +397,7 @@
 			}
 		}, {
 			key: 'resize',
-			value: function resize(fullscreen) {
+			value: function resize() {
 	
 				if (this.vrDisplay && this.vrDisplay.isPresenting) {
 	
@@ -407,7 +407,7 @@
 					var rightEye = this.vrDisplay.getEyeParameters('right');
 	
 					this.renderer.setSize(Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2, Math.max(leftEye.renderHeight, rightEye.renderHeight));
-				} else if (fullscreen) {
+				} else if (document.isFullScreen || document.webkitIsFullScreen || document.mozIsFullScreen) {
 					this.camera.aspect = window.innerWidth / window.innerHeight;
 					this.renderer.setSize(window.innerWidth, window.innerHeight);
 				} else {

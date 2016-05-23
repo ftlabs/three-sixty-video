@@ -122,7 +122,7 @@ class ThreeSixtyVideo {
 			document.addEventListener('fullscreenchange', function() {
 				if ( document.isFullScreen ) {
 					if (document.fullscreenElement === this.videoContainer) {
-						setTimeout(() => this.resize(true), 500);
+						setTimeout(() => this.resize(), 500);
 					}
 				} else {
 					setTimeout(() => this.resize(), 500);
@@ -135,7 +135,7 @@ class ThreeSixtyVideo {
 			document.addEventListener('webkitfullscreenchange', function() {
 				if ( document.webkitIsFullScreen ) {
 					if (document.webkitFullscreenElement === this.videoContainer) {
-						setTimeout(() => this.resize(true), 500);
+						setTimeout(() => this.resize(), 500);
 					}
 				} else {
 					setTimeout(() => this.resize(), 500);
@@ -148,7 +148,7 @@ class ThreeSixtyVideo {
 			document.addEventListener('mozfullscreenchange', function() {
 				if ( document.mozIsFullScreen ) {
 					if (document.mozFullscreenElement === this.videoContainer) {
-						setTimeout(() => this.resize(true), 500);
+						setTimeout(() => this.resize(), 500);
 					}
 				} else {
 					setTimeout(() => this.resize(), 500);
@@ -284,7 +284,7 @@ class ThreeSixtyVideo {
 		this.scene.add( sphere );
 	}
 
-	resize(fullscreen) {
+	resize() {
 
 		if (this.vrDisplay && this.vrDisplay.isPresenting) {
 
@@ -297,7 +297,7 @@ class ThreeSixtyVideo {
 				Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
 				Math.max(leftEye.renderHeight, rightEye.renderHeight)
 			);
-		} else if (fullscreen) {
+		} else if (document.isFullScreen || document.webkitIsFullScreen || document.mozIsFullScreen) {
 			this.camera.aspect = window.innerWidth / window.innerHeight;
 			this.renderer.setSize(
 				window.innerWidth,

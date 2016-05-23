@@ -22,6 +22,7 @@ span.three-sixty-video-container {
 		button {
 
 			pointer-events: auto;
+			display: inline-block;
 			@include oButtons(big, inverse);
 
 			&.play-icon {
@@ -51,6 +52,38 @@ span.three-sixty-video-container {
 				margin: -0.25em 0;
 				margin-right: 0.2em;
 			}
+		}
+	}
+
+	button.exit-fullscreen {
+		display: none !important;
+	}
+
+	&:fullscreen {
+		button.exit-fullscreen {
+			display: inline-block !important;
+		}
+
+		button.fullscreen {
+			display: none !important;
+		}
+	}
+	&:-moz-full-screen {
+		button.exit-fullscreen {
+			display: inline-block !important;
+		}
+
+		button.fullscreen {
+			display: none !important;
+		}
+	}
+	&:-webkit-full-screen {
+		button.exit-fullscreen {
+			display: inline-block !important;
+		}
+
+		button.fullscreen {
+			display: none !important;
 		}
 	}
 }

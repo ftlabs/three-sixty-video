@@ -111,8 +111,12 @@ class ThreeSixtyVideo {
 		this.videoContainer = videoContainer;
 		this.fullscreen = this.videoContainer.requestFullscreen || this.videoContainer.mozRequestFullscreen || this.videoContainer.webkitRequestFullscreen;
 
+		this.addButton('Exit Fullscreen', null, 'exit-fullscreen', function () {
+			(document.exitFullscreen || document.mozExitFullscreen || document.webkitExitFullscreen).bind(document)();
+		});
+
 		if (document.isFullScreen !== undefined) {
-			this.addButton('Full Screen', 'F', 'full-screen', function () {
+			this.addButton('Full Screen', 'F', 'fullscreen', function () {
 				this.fullscreen.bind(this.videoContainer)();
 			});
 			document.addEventListener('fullscreenchange', function() {
@@ -125,7 +129,7 @@ class ThreeSixtyVideo {
 				}
 			}.bind(this));
 		} else if (document.webkitIsFullScreen !== undefined) {
-			this.addButton('Full Screen', 'F', 'full-screen', function () {
+			this.addButton('Full Screen', 'F', 'fullscreen', function () {
 				this.fullscreen.bind(this.videoContainer)();
 			});
 			document.addEventListener('webkitfullscreenchange', function() {
@@ -138,7 +142,7 @@ class ThreeSixtyVideo {
 				}
 			}.bind(this));
 		} else if (document.mozIsFullScreen !== undefined) {
-			this.addButton('Full Screen', 'F', 'full-screen', function () {
+			this.addButton('Full Screen', 'F', 'fullscreen', function () {
 				this.fullscreen.bind(this.videoContainer)();
 			});
 			document.addEventListener('mozfullscreenchange', function() {

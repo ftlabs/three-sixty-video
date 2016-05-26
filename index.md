@@ -93,6 +93,10 @@ The nice folks at MaxCDN helped me set up a great streaming solution which would
 
 So far I have tested it on my mobile phone (Samsung Galaxy S6, Chrome and Samsung browser)
 
+It does not work in iOS safari unless in a standalone web app.
+
+It currently has some unresolved issues with the latest Chrome for Android.
+
 With the Gear VR and Google Cardboard v2.
 
 It relies heavily on the [WebVR polyfill](https://github.com/borismus/webvr-polyfill) so should work on iPhones. It should also work on WebVR enabled desktop browsers with supported headsets.

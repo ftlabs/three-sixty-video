@@ -4,7 +4,7 @@
   "main": "scripts/index.js",
   "scripts": {
     "watch": "./parallel.sh 'bundle exec jekyll serve' 'nodemon --watch ./scripts --watch ./scss -e js,scss --exec npm run build'",
-    "build": "origami-build-tools build --js=scripts/main.js --sass=scss/main.scss",
+    "build": "origami-build-tools build --js=scripts/main.js --sass=scss/main.scss && cp node_modules/three/build/three.min.js ./build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

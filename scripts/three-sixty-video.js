@@ -1,11 +1,11 @@
 'use strict';
+/* global THREE */
 
 window.WebVRConfig = {
   BUFFER_SCALE: 0.5,
   CARDBOARD_UI_DISABLED: true
 };
 
-const THREE = require('three');
 require('webvr-polyfill');
 
 // from THREE.js

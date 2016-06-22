@@ -271,12 +271,12 @@
 						}, false);
 					}
 				});
-				// preserveDrawingBuffer = true;
+				preserveDrawingBuffer = true;
 			} else if (navigator.getVRDevices) {
-					console.error('Your browser supports WebVR but not the latest version. See <a href=\'http://webvr.info\'>webvr.info</a> for more info.');
-				} else {
-					console.error('Your browser does not support WebVR. See <a href=\'http://webvr.info\'>webvr.info</a> for assistance.');
-				}
+				console.error('Your browser supports WebVR but not the latest version. See <a href=\'http://webvr.info\'>webvr.info</a> for more info.');
+			} else {
+				console.error('Your browser does not support WebVR. See <a href=\'http://webvr.info\'>webvr.info</a> for assistance.');
+			}
 	
 			this.camera;
 			this.scene;

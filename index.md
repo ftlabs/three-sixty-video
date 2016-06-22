@@ -13,10 +13,9 @@ description: 360 degree video spheres in the Web with Web VR. New cameras and th
 
 ## Example
 
-<p><video data-three-sixty-video data-three-sixty-video-lat="15" data-three-sixty-video-long="0" poster="./images/muaythai.jpg" src="https://ada-pull-zone-egnalefgk5.netdna-ssl.com/mt2.webm" width="450" height="300" controls crossorigin="anonymous" type="video/webm; dimension=360;"></video>
-</p>
+<p><video data-three-sixty-video data-three-sixty-video-lat="15" data-three-sixty-video-long="0" poster="./images/muaythai.jpg" src="https://ada-pull-zone-egnalefgk5.netdna-ssl.com/mt2.webm" width="450" height="300" controls crossorigin="anonymous" type="video/webm; dimension=360;"></video></p>
 <script src="build/three.min.js"></script>
-<script src="build/main.js"></script></p>
+<script src="build/main.js"></script>
 
 * On a desktop you should be able to pan the video with the mouse.
 * On a mobile you should be able to enter cardboard mode and view VR through a google cardboard.

@@ -3,7 +3,7 @@
 
 window.WebVRConfig = {
   BUFFER_SCALE: 0.5,
-  CARDBOARD_UI_DISABLED: true
+  CARDBOARD_UI_DISABLED: true,
 };
 
 require('webvr-polyfill');
@@ -166,7 +166,7 @@ class ThreeSixtyVideo {
 					window.addEventListener('vrdisplaypresentchange', () => this.onVRPresentChange(), false);
 				}
 			});
-			// preserveDrawingBuffer = true;
+			preserveDrawingBuffer = true;
 		} else if (navigator.getVRDevices) {
 			console.error('Your browser supports WebVR but not the latest version. See <a href=\'http://webvr.info\'>webvr.info</a> for more info.');
 		} else {

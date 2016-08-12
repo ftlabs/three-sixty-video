@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "three": "^0.78.0",
-    "webvr-polyfill": "^0.9.15"
+    "webvr-polyfill": "^0.9.16"
   },
   "devDependencies": {
     "bower": "^1.7.9",

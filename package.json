@@ -10,7 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "three": "^0.78.0",
+    "three": "^0.80.1",
     "webvr-polyfill": "^0.9.15"
   },
   "devDependencies": {
